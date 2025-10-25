@@ -1,0 +1,82 @@
+package com.example.product.service;
+
+import com.example.product.Model.Category;
+import com.example.product.Model.Product;
+import com.example.product.repository.Productrepo;
+import lombok.Value;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+
+@Service
+
+
+public class ProductService {
+    @Autowired
+    Productrepo productrepo;
+
+    public List<Product> getallproduct() {
+        return productrepo.findAll();
+
+    }
+    public List<Product> allproduct() {
+        return productrepo.findAll();
+
+    }
+    public Product addproduct(String name, String description, MultipartFile image, Double price,String quantity,String email,Long phone_number,String location) {
+        try {
+            // 1. Define upload directory (absolute path)
+            String uploadDir = "C:/Users/kailash/uploads"; // you can change this path
+            Path uploadPath = Paths.get(uploadDir);
+
+            // 2. Create directories if not exist
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+
+            // 3. Create unique filename
+            String fileName = System.currentTimeMillis() + "_" + image.getOriginalFilename();
+
+            // 4. Save file to disk
+            Path filePath = uploadPath.resolve(fileName);
+            image.transferTo(filePath.toFile());
+
+            // 5. Save product in DB
+            Product product = new Product();
+            product.setName(name);
+            product.setDescription(description);
+            product.setImage(fileName); // store only filename in DB
+            product.setPrice(price);
+
+            product.setQuantity(quantity);
+            product.setPhone_number(phone_number);
+            product.setLocation(location);
+            product.setEmail(email);
+
+            return productrepo.save(product);
+
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to store file: " + e.getMessage(), e);
+        }
+    }
+
+    public String deleteProductById(Long id) {
+        productrepo.deleteById(id);
+        return "deleted";
+    }
+
+    public List<Product> SearchProduct(String keyword) {
+        return  productrepo.SearchProduct(keyword);
+    }
+
+    public List<Product> product() {
+        return productrepo.findAll();
+    }
+}

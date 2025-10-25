@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Second-Hand Gold Marketplace</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        /* Navbar styles */
+        .navbar-custom {
+            background-color: #7b68ee;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+        .navbar-custom .navbar-brand, .navbar-custom .nav-link {
+            color: #000000;
+        }
+        /* Product card styles */
+        .card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.5);
+            transition: transform 0.5s;
+            font-family: Georgia, 'Times New Roman', Times, serif;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        .card-img-top {
+            height: 200px;
+            object-fit: cover;
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+        }
+        .product-price {
+            font-size: 18px;
+            font-weight: bold;
+            color: #575d58;
+        }
+        .btn-details {
+            margin-top: 10px;
+        }
+        .search-container{
+            display:flex ;
+            justify-content:end;
+
+
+        }
+
+
+        .search{
+            padding: 900;
+        }
+                   .text {
+  font-family: "Font Name", fallback-font, generic-family;
+}
+    </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-custom mb-4">
+    <div class="container">
+        <a class="navbar-brand" href="#">SwapZone</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item"><a th:href="@{/user/login}" class="nav-link">User Login</a></li>
+                <li class="nav-item"><a th:href="@{/create_user}" class="nav-link">Sign Up</a></li>
+                <li class="nav-item"> <a th:href="@{/addproducthtml} "class="nav-link">➕ Add Product</a></li>
+
+            </ul>
+        </div>
+    </div>
+</nav>
+
+
+<div  class="search-container">
+
+    <form action="/product/search" method="get">
+        <input class="search-box"type="text" name="keyword" placeholder="Search products..." required>
+        <button class="search" type="submit">🔍</button>
+    </form>
+</div>
+
+
+<div class="container-fluid text-center mb-4">
+    <div class="name">
+        <morquee><h3>Welcome to AgroMarket</h3></morquee>
+        <br>
+        <p>Fresh from the Farm, Direct to Your Home 🌱</p>
+        <p>Buy fresh produce directly from farmers. Fair prices, trusted quality, and support for local agriculture.</p>
+    </div>
+</div>
+
+<!-- Products Grid -->
+<div class="container py-5">
+    <center>
+    <h3 class="text">Available Products</h3>
+    </center>
+    <br>
+    <div class="row g-4">
+        <div class="col-md-4" th:each="p,iterStat : ${products}">
+            <div class="card h-100">
+                <img th:src="@{/images/{name}(name=${pr.image})}" class="card-img-top" alt="Product Image">
+                <div class="card-body text-center">
+                    <!-- Basic info -->
+                    <p><strong>Name:</strong> <span th:text="${p.name}">Product Name</span></p>
+                    <p><strong>Description:</strong> <span th:text="${p.description}">Description</span></p>
+                    <p><strong>Quantity:</strong> <span th:text="${p.quantity}">Quantity</span></p>
+                    <p><strong>Price:</strong> <span th:text="'₹' + ${p.price}">Price</span></p>
+
+                    <!-- Button to show extra details -->
+                    <button class="btn btn-primary btn-details"
+                            th:attr="id='toggleBtn' + ${iterStat.index}"
+                            th:onclick="'toggleDetails(' + ${iterStat.index} + ')'">
+                        Show Details
+                    </button>
+
+                    <!-- Hidden extra details -->
+                    <div class="extra-details" th:attr="id='extraDetails' + ${iterStat.index}" style="display: none; margin-top: 10px;">
+                        <p><strong>Email:</strong> <span th:text="${p.email}">email</span></p>
+                        <p><strong>Phone Number:</strong> <span th:text="${p.phone_number}">phone number</span></p>
+                        <p><strong>Location:</strong> <span th:text="${p.location}">location</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    function toggleDetails(index) {
+        const details = document.getElementById('extraDetails' + index);
+        const btn = document.getElementById('toggleBtn' + index);
+        if(details.style.display === 'none') {
+            details.style.display = 'block';
+            btn.textContent = 'Hide Details';
+        } else {
+            details.style.display = 'none';
+            btn.textContent = 'Show Details';
+        }
+    }
+</script>
+
+</body>
+
+
+
+</html>
