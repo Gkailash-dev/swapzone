@@ -105,7 +105,7 @@
     <div class="row g-4">
         <div class="col-md-4" th:each="p,iterStat : ${products}">
             <div class="card h-100">
-                <img th:src="@{/images/{name}(name=${pr.image})}" class="card-img-top" alt="Product Image">
+                <img th:src="${p.image}" class="card-img-top" alt="Product Image">
                 <div class="card-body text-center">
                     <!-- Basic info -->
                     <p><strong>Name:</strong> <span th:text="${p.name}">Product Name</span></p>

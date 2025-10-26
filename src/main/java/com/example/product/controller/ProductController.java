@@ -24,30 +24,28 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-
     // product adding html form
     @GetMapping("/addproducthtml")
     public String productaddheml() {
         return "addproduct";
     }
-
-    //product adding end point
     @PostMapping("/addproduct")
-    public Product addproduct(
+    //product adding end point
 
+    public  Product addProduct(
             @RequestParam("name") String name,
             @RequestParam("description") String description,
-            @RequestParam("image") MultipartFile image,
-
+            @RequestParam("file") MultipartFile file,
             @RequestParam("price") Double price,
             @RequestParam("quantity") String quantity,
             @RequestParam("email") String email,
-            @RequestParam("phone_number") Long phone_number,
-            @RequestParam("location") String location
+            @RequestParam("phone_number") Long phoneNumber,
+            @RequestParam("location") String location) {
 
-    ) {
-        return productService.addproduct(name, description, image, price, quantity, email, phone_number, location);
+        return productService.addproduct(name, description, file, price, quantity, email, phoneNumber, location);
+
     }
+
 
     //get the product  by using end point show on product.html
     @GetMapping("/Access_by_user_product")
@@ -66,29 +64,6 @@ public class ProductController {
         return "cproduct";
     }
 
-    //user for show image
-    @GetMapping("/images/{filename:.+}")
-    @ResponseBody
-    public ResponseEntity<Resource> serveFile(@PathVariable String filename) throws MalformedURLException {
-        Path uploadDir = Paths.get("C:/Users/kailash/uploads");
-        Path file = uploadDir.resolve(filename);
-        Resource resource = new UrlResource(file.toUri());
 
-        if(resource.exists() && resource.isReadable()) {
-            // Detect the content type dynamically
-            String contentType = "application/octet-stream";
-            try {
-                contentType = Files.probeContentType(file);
-            } catch (IOException e) {
-                // fallback to default
-            }
-
-            return ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_TYPE, contentType)
-                    .body(resource);
-        } else {
-            throw new RuntimeException("Could not read file: " + filename);
-        }
-    }
 
 }

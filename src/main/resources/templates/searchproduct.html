@@ -268,7 +268,7 @@
             <div class="card h-100">
                 <div class="trust-badge"></div>
 
-                <img th:src="@{/images/{name}(name=${p.image})}" class="card-img-top" alt="Product Image">
+                <img th:src="@${p.image}" class="card-img-top" alt="Product Image">
                 <div class="card-body text-center">
                     <h5 class="card-title" th:text="${p.name}">Product Name</h5>
                     <p class="card-text" th:text="${p.description}">Product description</p>

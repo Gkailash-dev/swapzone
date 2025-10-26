@@ -1,18 +1,13 @@
 package com.example.product.service;
 
-import com.example.product.Model.Category;
+import com.example.product.CloudinaryService;
 import com.example.product.Model.Product;
 import com.example.product.repository.Productrepo;
-import lombok.Value;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 
 @Service
@@ -21,6 +16,8 @@ import java.util.List;
 public class ProductService {
     @Autowired
     Productrepo productrepo;
+    @Autowired
+    private CloudinaryService cloudinaryService;
 
     public List<Product> getallproduct() {
         return productrepo.findAll();
@@ -30,29 +27,15 @@ public class ProductService {
         return productrepo.findAll();
 
     }
-    public Product addproduct(String name, String description, MultipartFile image, Double price,String quantity,String email,Long phone_number,String location) {
+    public Product addproduct(String name, String description, MultipartFile file, Double price,String quantity,String email,Long phone_number,String location) {
         try {
-            // 1. Define upload directory (absolute path)
-            String uploadDir = "C:/Users/kailash/uploads"; // you can change this path
-            Path uploadPath = Paths.get(uploadDir);
 
-            // 2. Create directories if not exist
-            if (!Files.exists(uploadPath)) {
-                Files.createDirectories(uploadPath);
-            }
-
-            // 3. Create unique filename
-            String fileName = System.currentTimeMillis() + "_" + image.getOriginalFilename();
-
-            // 4. Save file to disk
-            Path filePath = uploadPath.resolve(fileName);
-            image.transferTo(filePath.toFile());
-
+            String imageUrl = cloudinaryService.uploadImage(file);
             // 5. Save product in DB
             Product product = new Product();
             product.setName(name);
             product.setDescription(description);
-            product.setImage(fileName); // store only filename in DB
+            product.setImage(imageUrl); // store only filename in DB
             product.setPrice(price);
 
             product.setQuantity(quantity);
