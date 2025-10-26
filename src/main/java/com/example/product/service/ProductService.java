@@ -62,4 +62,8 @@ public class ProductService {
     public List<Product> product() {
         return productrepo.findAll();
     }
+
+    public List<Product> searchProducts(String keyword) {
+        return  productrepo.SearchProduct(keyword);
+    }
 }
